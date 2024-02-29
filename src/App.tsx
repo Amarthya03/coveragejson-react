@@ -4,7 +4,13 @@ import L from "leaflet";
 import * as CovJSON from "covjson-reader";
 import * as LC from "leaflet-coverage";
 
-import multipolygon from "./data/multipoygon.json";
+import multipolygon from "./data/multipolygon.json";
+
+// interface Props {
+//   latitude: number;
+//   longitude: number;
+//   tileLayer: string;
+// }
 
 function App() {
   useEffect(() => {
@@ -13,12 +19,16 @@ function App() {
       maxZoom: 18,
     }).addTo(map);
 
-    let layers = L.control.layers(null, null, { collapsed: false }).addTo(map);
+    const layers = L.control
+      .layers(undefined, undefined, { collapsed: false })
+      .addTo(map);
 
-    let layer;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let layer: any;
 
     CovJSON.read(multipolygon)
-      .then((cov) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .then((cov: any) => {
         layer = LC.dataLayer(cov, { parameter: "temperature" })
           .on("afterAdd", () => {
             LC.legend(layer).addTo(map);
@@ -27,7 +37,7 @@ function App() {
           .addTo(map);
         layers.addOverlay(layer, "Temperature");
       })
-      .catch((e) => {
+      .catch((e: Error) => {
         console.log(e);
       });
 
